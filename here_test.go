@@ -1,9 +1,15 @@
 package here
 
 import (
+	"crypto/sha256"
+	"fmt"
+	"os"
 	"strings"
 	"testing"
 )
+
+// goldenhash
+const sumOK = "1d57d117e6b45dca68be25b3a1666385b5a079ca27746ca91055b89b9065c473"
 
 var logsink strings.Builder
 
@@ -316,6 +322,31 @@ func TestPif(t *testing.T) {
 	}
 	p("\npif by table end\n")
 	logsink.WriteString(bu.String())
+}
+
+func TestRegression(t *testing.T) {
+	var skipck bool
+	if outfn := os.Getenv("MKGOLD"); outfn != "" {
+		if outfn == "NOHASH" {
+			skipck = true
+		} else if outfn == "T" {
+			os.Stdout.WriteString(logsink.String())
+		} else if err := os.WriteFile(outfn, []byte(logsink.String()), 0660); err != nil {
+			t.Fatalf("Can not dump to file %s [%v]", outfn, err)
+		} else {
+			fmt.Fprintf(os.Stderr, "\"Golden\" output has been written to %s\n", outfn)
+		}
+	}
+	if !skipck {
+		out := fmt.Sprintf("%x", sha256.Sum256([]byte(logsink.String())))
+		if out != sumOK {
+			t.Logf("Regression! Expected hash: %s", sumOK)
+			t.Logf("        Hash now computed: %s", out)
+			t.Logf("Diff MKGOLD output before setting a new hash to:")
+			t.Logf("const sumOK = \"%s\"", out)
+			t.Fail()
+		}
+	}
 }
 
 var piftt = []string{

@@ -1,4 +1,5 @@
 // (c) 2021 Ohir Ripe. MIT license.
+
 /* Package here provides three debug printer functions: Dump, Printf, and If.
 When used direct these write to the os.Stderr. If guarded by the Verbose
 function, they can write to any io.StringWriter provided, or be turned off
