@@ -99,7 +99,24 @@ func Verbose(V bool, osw ...io.StringWriter) (func(...interface{}),
 				return r
 			}
 	} else {
-		return func(...interface{}) {}, func(string, ...interface{}) {}, stubIf
+		return func(...interface{}) {}, func(string, ...interface{}) {},
+			func(c bool, Fmt string, a ...interface{}) bool { // stubIf
+				// caller semantics may not depend on the verbose flag
+				posMax := len(Fmt) - 1
+				if posMax > 0 && Fmt[0] == ' ' {
+					Fmt = Fmt[1:]
+					posMax--
+				}
+				if posMax < 1 || Fmt[0] == '-' ||
+					!(Fmt[0] == '!' || Fmt[0] == ':' || Fmt[0] == '+') {
+					return c
+				} else if Fmt[1] == '+' {
+					return true
+				} else if Fmt[1] == '!' {
+					return false
+				}
+				return c
+			}
 	}
 }
 
@@ -139,19 +156,19 @@ func If(c bool, fm string, a ...interface{}) bool {
 	return r
 }
 
-func pif(c bool, fm string, a ...interface{}) (bld, bool) {
-	from, pos, posMax := 0, 0, len(fm)-1
+func pif(c bool, Fmt string, a ...interface{}) (bld, bool) {
+	from, pos, posMax := 0, 0, len(Fmt)-1
 	var o strings.Builder
-	if posMax < 0 || fm[pos] == '-' { // off
+	if posMax < 0 || Fmt[pos] == '-' { // off
 		return &o, c
 	}
-	p := func(Fmt string) {
-		o.WriteString(fmt.Sprintf(Fmt, a...))
+	p := func(fm string) {
+		o.WriteString(fmt.Sprintf(fm, a...))
 	}
 	// ours := func(x byte) bool { return x == '!' || x == '+' || x == ':' }
-	ctl := fm[0]
+	ctl := Fmt[0]
 	if ctl == ' ' {
-		fm = fm[1:]
+		Fmt = Fmt[1:]
 		posMax--
 		if posMax < 0 { // single space
 			if c {
@@ -161,9 +178,9 @@ func pif(c bool, fm string, a ...interface{}) (bld, bool) {
 			}
 			return &o, c
 		}
-		ctl = fm[0]
+		ctl = Fmt[0]
 		// do not elide for shorts: " :", " !", " +"
-		for i, x := 0, ctl; i < 6 && i < posMax; x = fm[i] {
+		for i, x := 0, ctl; i < 6 && i < posMax; x = Fmt[i] {
 			if !(x == '!' || x == ':' || x == '+') {
 				from = i
 				break
@@ -174,23 +191,23 @@ func pif(c bool, fm string, a ...interface{}) (bld, bool) {
 	if ctl == ':' {
 		switch {
 		case from != 0:
-			p(fm[from:])
+			p(Fmt[from:])
 		case c:
-			p("true" + fm)
+			p("true" + Fmt)
 		default:
-			p("false" + fm)
+			p("false" + Fmt)
 		}
 	} else if c && ctl != '!' { // default print
-		p(fm[from:])
+		p(Fmt[from:])
 	} else if !c && ctl == '!' {
-		p(fm[from:])
+		p(Fmt[from:])
 	}
 	if !(ctl == '!' || ctl == ':' || ctl == '+') {
 		return &o, c
 	}
 	pos++
 	if pos <= posMax {
-		switch fm[pos] {
+		switch Fmt[pos] {
 		case '!':
 			return &o, false
 		case '+':
@@ -198,25 +215,6 @@ func pif(c bool, fm string, a ...interface{}) (bld, bool) {
 		}
 	}
 	return &o, c
-}
-
-// stubIf needs to do a bit, semantics may not depend on the verbose flag
-func stubIf(c bool, fm string, _ ...interface{}) bool {
-	posMax := len(fm) - 1
-	if posMax < 1 || fm[0] == '-' {
-		return c
-	} else if fm[0] == ' ' {
-		fm = fm[1:]
-		posMax--
-	}
-	if posMax < 1 || !(fm[0] == '!' || fm[0] == ':' || fm[0] == '+') {
-		return c
-	} else if fm[1] == '+' {
-		return true
-	} else if fm[1] == '!' {
-		return false
-	}
-	return c
 }
 
 /*
@@ -233,7 +231,7 @@ using Printf family "%#v" format - but with each value or struct member
 given in a separate line - with strings, tables and slices possibly
 truncated - to not clobber the output with unusable garbage. For after having
 a glimpsee these can be further inspected - passed as individual fields.
-Dump describes input values one by one, and numbers them from [1] to [n].
+Dump describes input values one by one, and numbers them from 1| to n|.
 
 Conditional print:
   If argument list begins with a bool value, and this value is false, D simply
@@ -336,7 +334,6 @@ func b64ruler(ruler bool, v uint64, pfx string) string {
 	acu, hex, w := v, v, blen
 	bits := [blen]byte{}
 	rulr := [blen]byte{}
-ruout:
 	for i := 0; i < 64; i++ {
 		wr := w % 5
 		w--
@@ -365,7 +362,7 @@ ruout:
 		case wr == 1:
 			if i > 7 && acu == 0 {
 				w++
-				break ruout
+				break // loop
 			}
 			bits[w] = ','
 			rulr[w] = '|'
@@ -404,7 +401,7 @@ func chop(oi *strings.Builder, ov string) {
 	var comsp, brace, lastw int
 	const div = "\n~~\n"
 	var t strings.Builder
-	t.Grow(1 << 12)
+	t.Grow(1 << 10) // arbitrary
 	for i := 1; i < len(ov); i++ {
 		switch ov[i] {
 		case ':':
