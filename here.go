@@ -72,7 +72,8 @@ import (
 const tWidth = 99 // nowadays terminals are wide
 type bld = *strings.Builder
 
-/* function Verbose(V bool) (Dump, Printf, Pif) returns functions mentioned.
+/*
+function Verbose(V bool) (Dump, Printf, Pif) returns functions mentioned.
 If passed flag V is false, Verbose returns a no-op stubs of all three instead.
 Optional io.StringWriter can be provided after the flag to set printers output:
 
@@ -124,7 +125,8 @@ func Verbose(V bool, osw ...io.StringWriter) (func(...interface{}),
 // package API to complement its version returned by the Verbose() guard.
 func Printf(Fmt string, a ...interface{}) { fmt.Fprintf(os.Stderr, Fmt, a...) }
 
-/* Function Pif by default prints if the c condition is true.
+/*
+Function Pif by default prints if the c condition is true.
 "Pif" behaviour can be fine tuned both on input and output (ie. when it
 prints and what it returns) by short punctuation based commands at the
 start of its Fmt string:
@@ -463,7 +465,8 @@ func asu64(iv interface{}) uint64 {
 	return 0xdeadbeefcafebaca
 }
 
-/* Func XBit returns human readable form of bits and bit fields of an uint value
+/*
+Func XBit returns human readable form of bits and bit fields of an uint value
 - as prescribed by its pic (format) string. XBit is included here for
 author's convenience and for a few others to reuse. Here version
 allocates its output string and is guarded against misuse.
