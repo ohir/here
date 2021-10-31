@@ -75,7 +75,7 @@ type bld = *strings.Builder
 /*
 function Verbose(V bool) (Dump, Printf, Pif) returns functions mentioned.
 If passed flag V is false, Verbose returns a no-op stubs of all three instead.
-Optional io.StringWriter can be provided after the flag to set printers output:
+Optional io.StringWriter can be provided after the flag to set printers output. Eg:
 
 	D, P, Pif := here.Verbose(true, os.Stdout) // override default Stderr.
 */
@@ -143,7 +143,7 @@ Next optional character controls printing "when":
 If "when" is present, next optional character may control the returned bool:
   + return true  always ( ++ !+ :+ )
   ! return false always ( !! +! :! )
-otherwise If returns boolean value it got.
+otherwise Pif returns boolean value it got.
 
 Example:
   //  for x < 7 && y > x && !tmout {
@@ -236,14 +236,14 @@ a glimpsee these can be further inspected - passed as individual fields.
 Dump describes input values one by one, and numbers them from 1| to n|.
 
 Conditional print:
-  If argument list begins with a bool value, and this value is false, D simply
-  returns. (If you really want to see just a single bool, prepend it with a
-  literal 'true').
+If Dump's argument list begins with a bool value, and this value is false,
+Dump simply returns. (If you really want to see just a single bool, prepend
+it with a literal 'true').
 
 Block title:
-  Similarily, first (or first after the condition) string argument may provide
-  a title to the block of output - if it begins with two dashes and a space:
-  "-- here-comment". Otherwise anonymous "-- Here >>>" marker is used.
+Similarily, first (or first after the condition) string argument may provide
+a title to the block of output - if it begins with two dashes and a space:
+"-- here-comment". Otherwise anonymous "-- Here >>>" marker is used.
 
 */
 func Dump(a ...interface{}) { os.Stderr.WriteString(dump(a...).String()) }
@@ -475,7 +475,7 @@ Bits of input are consumed from the lowest to the highest (ie. are
 shifted right), and bitpeek output is produced using single-character
 commands mixed with descriptions given as quoted text or bit labels.
 So pic (format) string is a Little Endian picture, with Label of b63
-being at the beginning, and b0 at the end: `'Bit11:?Bit10:?..Bit0:?`.
+being at the beginning, and b0 at the end: `'Bit63:..?Bit33:?..Bit0:?`.
 
    get N bits | output:
    > - 1 bit  | LABEL - show if bit is SET (1).    Otherwise skips.

@@ -3,8 +3,7 @@
 
 Package here provides three debug printer functions: Dump, Printf, and Pif.
 
-When used direct, those functions write to the os.Stderr; if guarded by the Verbose function they can write to any io.StringWriter provided or be turned off (substituted with a noop versions).
-It is possible to simultanously have many sets of Here printers - each set writing to distinct destination.
+When used direct, those functions write to the `os.Stderr`. If guarded by the `Verbose` function, they can write to any `io.StringWriter` provided or be turned off (substituted with a noop versions).  It is possible to simultanously have many sets of Here printers - each set writing to distinct destination.
 
 ``` go
 // package API:
