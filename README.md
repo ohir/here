@@ -29,8 +29,8 @@ Function `Verbose(V bool) (Dump, Printf, Pif)`  returns package functions guarde
 
 ### Code:
 func [Dump](/here.go?s=7303:7330#L247), func [Printf](/here.go?s=3725:3766#L125), func [Pif](/here.go?s=4758:4807#L153), func [Verbose](/here.go?s=2467:2609#L81)
-#### `Coverage:` [100%](/here_test.go)
-#### `Docs:` [pkg.go.dev/github.com/ohir/here](https://pkg.go.dev/github.com/ohir/here)
+- Docs: [pkg.go.dev/github.com/ohir/here](https://pkg.go.dev/github.com/ohir/here)
+- Coverage: [100%](/here_test.go)
 
 ### Example usage:
 ``` go
