@@ -20,7 +20,7 @@ func Verbose(V bool, osw ...io.StringWriter) (
     func(bool, string, ...interface{}) bool, // Pif
 )
 ```
-Function `Verbose(V bool) (Dump, Printf, If)`  returns package functions guarded by the boolean flag. If passed flag is false, no-op stubs of all functions are returned instead of printing ones.  Optional `io.StringWriter` can be provided after the flag to set printers output:
+Function `Verbose(V bool) (Dump, Printf, Pif)`  returns package functions guarded by the boolean flag. If passed flag is false, no-op stubs of all functions are returned instead of printing ones.  Optional `io.StringWriter` can be provided after the flag to set printers output:
 ``` go
 	D, P, Pif := here.Verbose(true, &builder)  // print to strings.Builder.
 	// or
