@@ -187,7 +187,7 @@ func pif(c bool, Fmt string, a ...interface{}) (bld, bool) {
 			}
 			i++
 		}
-	} //  "_.!tx" BUG 47 - should be default, returns mandated after dot
+	}
 	if ctl == ':' {
 		switch {
 		case from != 0:

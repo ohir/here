@@ -9,7 +9,7 @@ import (
 )
 
 // goldenhash
-const sumOK = "1d57d117e6b45dca68be25b3a1666385b5a079ca27746ca91055b89b9065c473"
+const sumOK = "4325312faa9a6334d480c34a9cd06e08e5360a7b914df0da78b6235b0a2c212d"
 
 var logsink strings.Builder
 
@@ -166,7 +166,7 @@ func TestPifStub(t *testing.T) {
 	_, p, pif := Verbose(true, &bu)
 	_, _, paf := Verbose(false)
 	part := func(s string) {
-		p("\nPif test: %s\n")
+		p("\nPif test: %s\n", s)
 		logsink.WriteString(bu.String())
 		bu.Reset()
 	}
@@ -191,7 +191,7 @@ func TestPifShallow(t *testing.T) {
 	var bu strings.Builder
 	_, p, pif := Verbose(true, &bu)
 	part := func(s string) {
-		p("\n^^^Above test Pif: %s\n")
+		p("\n^^^Above test Pif: %s\n", s)
 		logsink.WriteString(bu.String())
 		bu.Reset()
 	}
