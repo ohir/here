@@ -27,10 +27,10 @@ Function `Verbose(V bool) (Dump, Printf, Pif)`  returns package functions guarde
 	D, P, Pif := here.Verbose(true, os.Stdout) // override default Stderr.
 ```
 
-### Code:
-func [Dump](/here.go?s=7308:7335#L249), func [Printf](/here.go?s=3726:3767#L126), func [Pif](/here.go?s=4762:4812#L155), func [Verbose](/here.go?s=2468:2610#L82)
-- Docs: [![Go Reference](https://pkg.go.dev/badge/github.com/ohir/here.svg)](https://pkg.go.dev/github.com/ohir/here)
-- Coverage: [100%](/here_test.go)
+### Docs:
+[![Go Reference](https://pkg.go.dev/badge/github.com/ohir/here.svg)](https://pkg.go.dev/github.com/ohir/here)
+### Source:
+func [Dump](/here.go?s=7308:7335#L249), func [Printf](/here.go?s=3726:3767#L126), func [Pif](/here.go?s=4762:4812#L155), func [Verbose](/here.go?s=2468:2610#L82) || Coverage: [100%](/here_test.go)
 
 ### Example usage:
 ``` go
