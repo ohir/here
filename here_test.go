@@ -67,7 +67,7 @@ func TestDumpCorner(t *testing.T) {
 	pif(true, "!!ha")
 	Dump()
 	Printf("")
-	If(true, "!!ha")
+	Pif(true, "!!ha")
 	exp := 83 // 1|true
 	if bu.Len() != exp {
 		t.Logf("Expected %d characters in buffer, but got %d instead!", exp, bu.Len())

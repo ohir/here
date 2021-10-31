@@ -72,7 +72,7 @@ import (
 const tWidth = 99 // nowadays terminals are wide
 type bld = *strings.Builder
 
-/* function Verbose(V bool) (Dump, Printf, If) returns functions mentioned.
+/* function Verbose(V bool) (Dump, Printf, Pif) returns functions mentioned.
 If passed flag V is false, Verbose returns a no-op stubs of all three instead.
 Optional io.StringWriter can be provided after the flag to set printers output:
 
@@ -93,15 +93,15 @@ func Verbose(V bool, osw ...io.StringWriter) (func(...interface{}),
 			func(Fmt string, a ...interface{}) { // Printf
 				out.WriteString(fmt.Sprintf(Fmt, a...))
 			},
-			func(c bool, Fmt string, a ...interface{}) bool { // If
+			func(c bool, Fmt string, a ...interface{}) bool { // Pif
 				o, r := pif(c, Fmt, a...)
 				out.WriteString(o.String())
 				return r
 			}
 	} else {
 		return func(...interface{}) {}, func(string, ...interface{}) {},
-			func(c bool, Fmt string, a ...interface{}) bool { // stubIf
-				// caller semantics may not depend on the verbose flag
+			func(c bool, Fmt string, a ...interface{}) bool {
+				// Pif caller semantics may not depend on the verbose flag
 				posMax := len(Fmt) - 1
 				if posMax > 0 && Fmt[0] == ' ' {
 					Fmt = Fmt[1:]
@@ -120,12 +120,12 @@ func Verbose(V bool, osw ...io.StringWriter) (func(...interface{}),
 	}
 }
 
-// func P is a fmt.Fprintf writing to the os.Stderr. It is included in the
+// func Printf is a fmt.Fprintf writing to the os.Stderr. It is included in the
 // package API to complement its version returned by the Verbose() guard.
 func Printf(Fmt string, a ...interface{}) { fmt.Fprintf(os.Stderr, Fmt, a...) }
 
-/* Function If by default prints if the c condition is true.
-"If" behaviour can be fine tuned both on input and output (ie. when it
+/* Function Pif by default prints if the c condition is true.
+"Pif" behaviour can be fine tuned both on input and output (ie. when it
 prints and what it returns) by short punctuation based commands at the
 start of its Fmt string:
 
@@ -145,12 +145,12 @@ otherwise If returns boolean value it got.
 
 Example:
   //  for x < 7 && y > x && !tmout {
-  for here.If(x < 7 && y > x && !tmout,
+  for here.Pif(x < 7 && y > x && !tmout,
     "loop broke with x:%d, y:%d, tmo:%t\n", x, y, tmout){
 	//...
   }
 */
-func If(c bool, fm string, a ...interface{}) bool {
+func Pif(c bool, fm string, a ...interface{}) bool {
 	o, r := pif(c, fm, a...)
 	os.Stderr.WriteString(o.String())
 	return r
