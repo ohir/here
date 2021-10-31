@@ -3,7 +3,7 @@
 
 Package here provides three debug printer functions: Dump, Printf, and If.
 
-When used direct, those functions write to the os.Stderr. If guarded by the Verbose function, they can write to any io.StringWriter provided, or be turned off (substituted with a noop versions).
+When used direct, those functions write to the os.Stderr; if guarded by the Verbose function they can write to any io.StringWriter provided or be turned off (substituted with a noop versions).
 It is possible to simultanously have many sets of Here printers - each set writing to distinct destination.
 
 ``` go
@@ -28,7 +28,9 @@ Function `Verbose(V bool) (Dump, Printf, If)`  returns package functions guarded
 ```
 
 ### Code:
-func [Dump](/here.go?s=7339:7366#L248), func [Printf](/here.go?s=3277:3318#L107), func [If](/here.go?s=4310:4359#L135), func [Verbose](/here.go?s=2466:2608#L80); [Coverage: 100%](/here_test.go)
+func [Dump](/here.go?s=7303:7330#L247), func [Printf](/here.go?s=3725:3766#L125), func [If](/here.go?s=4758:4807#L153), func [Verbose](/here.go?s=2467:2609#L81)
+[`Coverage:` 100%](/here_test.go)
+[`Docs:` ](https://pkg.go.dev/github.com/ohir/here)
 
 ### Example usage:
 ``` go
