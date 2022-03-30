@@ -244,6 +244,7 @@ Block title:
 Similarily, first (or first after the condition) string argument may provide
 a title to the block of output - if it begins with two dashes and a space:
 "-- here-comment". Otherwise anonymous "-- Here >>>" marker is used.
+The "--!" sentinel turns output of headers off.
 
 */
 func Dump(a ...interface{}) { os.Stderr.WriteString(dump(a...).String()) }
@@ -272,9 +273,14 @@ func dump(ia ...interface{}) bld {
 		return &o
 	}
 	if s, ok := ia[0].(string); ok && len(s) > 2 &&
-		s[0] == '-' && s[1] == '-' && s[2] == ' ' {
-		m = fmt.Sprintf(hereTailS, s[3:])
-		p(hereHeadS, s[3:])
+		s[0] == '-' && s[1] == '-' &&
+		(s[2] == ' ' || s[2] == '!') {
+		if s[2] == '!' {
+			m = ""
+		} else {
+			m = fmt.Sprintf(hereTailS, s[3:])
+			p(hereHeadS, s[3:])
+		}
 		ia = ia[1:]
 	} else {
 		p("\n" + hereHead)
